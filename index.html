@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Nation 1K">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Nation 1K 单词卡</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" href="icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Paul Nation BNC/COCA</p>
+          <h1>单词卡</h1>
+        </div>
+        <button class="icon-button" id="settingsButton" type="button" aria-label="设置">
+          <span aria-hidden="true">⚙</span>
+        </button>
+      </header>
+
+      <section class="stats" aria-label="学习进度">
+        <div>
+          <strong id="totalWords">0</strong>
+          <span>词表</span>
+        </div>
+        <div>
+          <strong id="knownWords">0</strong>
+          <span>已掌握</span>
+        </div>
+        <div>
+          <strong id="reviewWords">0</strong>
+          <span>再练</span>
+        </div>
+      </section>
+
+      <nav class="tabs" aria-label="视图">
+        <button class="tab active" type="button" data-tab="today">今日</button>
+        <button class="tab" type="button" data-tab="review">复习</button>
+        <button class="tab" type="button" data-tab="library">词库</button>
+      </nav>
+
+      <main>
+        <section class="panel active" id="todayPanel">
+          <div class="daybar">
+            <button class="icon-button" id="prevDayButton" type="button" aria-label="上一天">
+              <span aria-hidden="true">‹</span>
+            </button>
+            <div class="day-title">
+              <strong id="dayTitle">第 1 天</strong>
+              <span id="dayRange">1-50</span>
+            </div>
+            <button class="icon-button" id="nextDayButton" type="button" aria-label="下一天">
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
+
+          <div class="progress-track" aria-hidden="true">
+            <div id="dayProgress" class="progress-fill"></div>
+          </div>
+
+          <article class="study-card">
+            <div class="card-meta">
+              <span id="cardPosition">1 / 50</span>
+              <span id="statusPill" class="status-pill">未学</span>
+            </div>
+
+            <button class="speak-button" id="speakButton" type="button">
+              <span aria-hidden="true">▶</span>
+              <span>发音</span>
+            </button>
+
+            <div class="word-zone">
+              <p id="wordId" class="word-id">#1</p>
+              <h2 id="wordText">the</h2>
+              <p id="ipaText" class="ipa">/ðə/</p>
+              <p id="meaningText" class="meaning">（定冠词）</p>
+            </div>
+
+            <label class="note-field" for="noteInput">
+              <span>我的备注</span>
+              <textarea id="noteInput" rows="2" maxlength="160" placeholder="中文发音提示"></textarea>
+            </label>
+
+            <div class="card-actions">
+              <button class="secondary-button" id="prevCardButton" type="button">上一词</button>
+              <button class="secondary-button" id="toggleMeaningButton" type="button">隐藏中文</button>
+              <button class="secondary-button" id="nextCardButton" type="button">下一词</button>
+            </div>
+
+            <div class="mark-actions">
+              <button class="review-button" id="againButton" type="button">再练</button>
+              <button class="known-button" id="knownButton" type="button">已掌握</button>
+            </div>
+          </article>
+
+          <section class="word-strip" aria-label="今日词表">
+            <div class="section-head">
+              <h2>今日 50 词</h2>
+              <button class="text-button" id="playDayButton" type="button">顺读</button>
+            </div>
+            <div class="word-list" id="dailyList"></div>
+          </section>
+        </section>
+
+        <section class="panel" id="reviewPanel">
+          <div class="section-head">
+            <h2>再练词</h2>
+            <button class="text-button" id="clearReviewButton" type="button">清空</button>
+          </div>
+          <div class="word-list" id="reviewList"></div>
+        </section>
+
+        <section class="panel" id="libraryPanel">
+          <label class="search-field" for="searchInput">
+            <span>搜索</span>
+            <input id="searchInput" type="search" inputmode="search" placeholder="英文 / 中文 / 备注">
+          </label>
+          <div class="word-list compact" id="libraryList"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="settingsModal" hidden>
+      <section class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="sheet-head">
+          <h2 id="settingsTitle">设置</h2>
+          <button class="icon-button" id="closeSettingsButton" type="button" aria-label="关闭">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <label class="switch-row">
+          <span>自动发音</span>
+          <input id="autoSpeakInput" type="checkbox">
+        </label>
+
+        <label class="switch-row">
+          <span>默认隐藏中文</span>
+          <input id="hideMeaningInput" type="checkbox">
+        </label>
+
+        <label class="range-row" for="rateInput">
+          <span>语速</span>
+          <input id="rateInput" type="range" min="0.65" max="1.05" step="0.05">
+        </label>
+
+        <div class="settings-actions">
+          <button class="secondary-button" id="resetStartButton" type="button">从今天开始</button>
+          <button class="secondary-button" id="exportButton" type="button">导出</button>
+          <label class="secondary-button import-label" for="importInput">导入</label>
+          <input id="importInput" type="file" accept="application/json" hidden>
+        </div>
+      </section>
+    </div>
+
+    <script src="words.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
